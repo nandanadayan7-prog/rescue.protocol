@@ -80,4 +80,263 @@
             border: 2px solid var(--soft-green);
             background: var(--soft-green);
             transition: all 0.3s ease;
-            outline
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-green);
+            background: var(--white);
+        }
+
+        /* --- Inventory Section --- */
+        .inventory-section h2 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-green);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .crop-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 28px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crop-card:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-5px);
+        }
+
+        .expiry-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: #fee2e2;
+            color: #dc2626;
+            margin-bottom: 1rem;
+        }
+
+        .crop-card h3 { margin-bottom: 0.5rem; }
+        .crop-card p { color: #6b7280; font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+        /* --- Buttons --- */
+        .btn {
+            padding: 1rem 1.5rem;
+            border-radius: 18px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: var(--dark-green);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.05);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        /* --- AI Pivot Section --- */
+        .ai-panel {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: var(--dark-green);
+            border-radius: 40px;
+            color: white;
+            text-align: center;
+            display: none;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pivot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .pivot-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 24px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .val-inc { color: var(--primary-green); font-weight: 700; font-size: 0.9rem; }
+
+        /* --- Success Overlay --- */
+        #rescue-overlay {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(22, 101, 52, 0.98);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🌿 Rescue Protocol</div>
+        <div style="font-size: 0.9rem; color: var(--dark-green); font-weight: 600;">Farmer ID: #4402</div>
+    </header>
+
+    <div class="container">
+        
+        <div class="registration-card">
+            <h2>Add New Stock</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Crop / Produce</label>
+                    <input type="text" id="cropName" placeholder="e.g. Avocado">
+                </div>
+                <div class="input-group">
+                    <label>Weight (kg)</label>
+                    <input type="number" id="cropQty" placeholder="1000">
+                </div>
+                <div class="input-group">
+                    <label>Shelf Life (Hrs)</label>
+                    <input type="number" id="cropExpiry" placeholder="72">
+                </div>
+                <div class="input-group">
+                    <button class="btn btn-primary" onclick="registerStock()">Register Stock</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="inventory-section">
+            <h2>Active Inventory</h2>
+            <div class="inventory-grid" id="invGrid">
+                <div class="crop-card">
+                    <span class="expiry-badge">Expiring in 12h</span>
+                    <h3>Fresh Tomatoes</h3>
+                    <p>Quantity: 500kg | Location: Sector 4</p>
+                    <button class="btn btn-primary" onclick="triggerAI('Tomatoes')">Get AI Sale Ideas</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="aiPanel" class="ai-panel">
+            <h2 id="aiTitle">🤖 AI Smart Value Pivot</h2>
+            <p id="aiDesc">Analyzing local buyer demand and processing capacity...</p>
+            <div class="pivot-grid" id="pivotGrid"></div>
+            <p style="margin-top: 2rem; opacity: 0.7; font-size: 0.9rem;">“Don’t just sell produce. Sell possibilities.”</p>
+        </div>
+
+    </div>
+
+    <div id="rescue-overlay">
+        <div style="font-size: 5rem;">🏆</div>
+        <h1>Smart Pivot Hero</h1>
+        <p style="max-width: 400px; margin: 1rem auto;">The broadcast was successful! Local processors have been notified of your value-added offer.</p>
+        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 20px; margin: 2rem;">
+            <p>💰 Value Recovered: +24%</p>
+            <p>🌍 CO2 Avoided: 850kg</p>
+        </div>
+        <button class="btn btn-primary" style="width: 200px;" onclick="location.reload()">Return Home</button>
+    </div>
+
+    <script>
+        const pivotData = {
+            "Tomatoes": [
+                { idea: "Tomato Puree", buyer: "Hotel Chains", val: "+30%" },
+                { idea: "Pizza Base", buyer: "Cloud Kitchens", val: "+20%" },
+                { idea: "Dehydration", buyer: "Food Factories", val: "+15%" }
+            ],
+            "Mangoes": [
+                { idea: "Mango Pulp", buyer: "Juice Brands", val: "+40%" },
+                { idea: "Dried Fruit", buyer: "Retail Brands", val: "+55%" },
+                { idea: "Chutney Base", buyer: "Export Units", val: "+25%" }
+            ],
+            "Generic": [
+                { idea: "Flash Frozen", buyer: "Supermarkets", val: "+12%" },
+                { idea: "Direct Bundle", buyer: "Local Co-ops", val: "+10%" },
+                { idea: "Rescue Pack", buyer: "NGO/Kitchens", val: "Tax Benefit" }
+            ]
+        };
+
+        function registerStock() {
+            const name = document.getElementById('cropName').value;
+            const qty = document.getElementById('cropQty').value;
+            const exp = document.getElementById('cropExpiry').value;
+
+            if(!name || !qty || !exp) return alert("Please fill all details.");
+
+            const grid = document.getElementById('invGrid');
+            const card = document.createElement('div');
+            card.className = 'crop-card';
+            card.innerHTML = `
+                <span class="expiry-badge">Expiring in ${exp}h</span>
+                <h3>${name}</h3>
+                <p>Quantity: ${qty}kg | Location: Farm Direct</p>
+                <button class="btn btn-primary" onclick="triggerAI('${name}')">Get AI Sale Ideas</button>
+            `;
+            grid.prepend(card);
+            
+            // Clear inputs
+            document.getElementById('cropName').value = '';
+            document.getElementById('cropQty').value = '';
+            document.getElementById('cropExpiry').value = '';
+        }
+
+        function triggerAI(crop) {
+            const panel = document.getElementById('aiPanel');
+            const grid = document.getElementById('pivotGrid');
+            const title = document.getElementById('aiTitle');
+            
+            title.innerText = `🤖 Smart Value Pivot: ${crop}`;
+            panel.style.display = 'block';
+            grid.innerHTML = '';
+
+            const options = pivotData[crop] || pivotData["Generic"];
+            
+            options.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'pivot-card';
+                div.innerHTML = `
+                    <h4 style="margin-bottom:0.5rem">${opt.idea}</h4>
+                    <p style="font-size:0.8rem; margin-bottom:1rem; opacity:0.8">Target: ${opt.buyer}</p>
+                    <p class="val-inc">Value Increase: ${opt.val}</p>
+                    <button class="btn btn-primary" style="margin-top:1rem; padding:0.6rem; font-size:0.8rem" onclick="rescue()">Broadcast</button>
+                `;
+                grid.appendChild(div);
+            });
+
+            panel.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function rescue() {
+            document.getElementById('rescue-overlay').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
