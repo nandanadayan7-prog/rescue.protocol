@@ -1,374 +1,69 @@
+<div id="buyer-marketplace" style="display: none; opacity: 0; transition: opacity 1s ease;">
+    <header>
+        <div class="logo">🛒 Rescue Marketplace</div>
+        <div style="font-size: 0.8rem; opacity: 0.7;">Role: <span style="color:var(--primary-green)">Verified Processor</span></div>
+    </header>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rescue Protocol | Emergency Food Pivot</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-green: #4ade80;
-            --soft-green: #f0fdf4;
-            --dark-green: #166534;
-            --accent-sage: #bbf7d0;
-            --white: #ffffff;
-            --text-main: #1f2937;
-            --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
-        }
+    <div class="container">
+        <div class="hero" style="text-align: left; padding: 2rem 0;">
+            <h1 style="color: var(--dark-green); font-size: 2.5rem;">Rescue Opportunities</h1>
+            <p>High-quality surplus and pivot-ready produce within 50km.</p>
+        </div>
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            color: var(--text-main);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* --- Rescue Protocol: Landing Interface --- */
-        #onboarding-screen {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hero-art {
-            width: 120px;
-            height: 120px;
-            background: var(--primary-green);
-            border-radius: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 3rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.3);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            color: var(--dark-green);
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-        }
-
-        .hero-sub {
-            font-size: 1.2rem;
-            color: #4b5563;
-            max-width: 500px;
-            margin-bottom: 2.5rem;
-        }
-
-        /* --- Dashboard Section (Hidden by Default) --- */
-        #main-dashboard {
-            display: none;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        header {
-            padding: 1rem 5%;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(15px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--accent-sage);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo { font-weight: 700; color: var(--dark-green); font-size: 1.2rem; }
-
-        .container {
-            max-width: 1100px;
-            margin: 2rem auto;
-            padding: 0 20px;
-        }
-
-        /* --- Dashboard Cards --- */
-        .card-base {
-            background: var(--white);
-            border-radius: 32px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 2.5rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--dark-green);
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 1rem;
-            border-radius: 16px;
-            border: 2px solid var(--soft-green);
-            background: var(--soft-green);
-            outline: none;
-        }
-
-        .inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .crop-card {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 28px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid transparent;
-            transition: 0.3s;
-        }
-
-        .expiry-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            background: #fee2e2;
-            color: #dc2626;
-            margin-bottom: 1rem;
-        }
-
-        /* --- Buttons --- */
-        .btn {
-            padding: 1.2rem 2.5rem;
-            border-radius: 50px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: var(--primary-green);
-            color: var(--dark-green);
-            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.2);
-        }
-
-        .btn-primary:hover {
-            transform: scale(1.05);
-            filter: brightness(1.05);
-        }
-
-        /* --- AI Section --- */
-        .ai-panel {
-            margin-top: 3rem;
-            padding: 3rem;
-            background: var(--dark-green);
-            border-radius: 40px;
-            color: white;
-            display: none;
-        }
-
-        .pivot-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .pivot-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* --- Success Screen --- */
-        #success-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(22, 101, 52, 0.98);
-            z-index: 2000;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-
-    <section id="onboarding-screen">
-        <div class="hero-art">🛡️</div>
-        <h1 class="hero-title">Rescue Protocol</h1>
-        <p class="hero-sub">AI-powered emergency pivot for the agricultural supply chain. When primary orders fail, we find the value.</p>
-        <button class="btn btn-primary" onclick="initRescue()">Initialize Rescue Dashboard</button>
-        <p style="margin-top: 2rem; font-size: 0.8rem; color: #94a3b8;">v1.0 Demo Mode • Connected to Local Processors</p>
-    </section>
-
-    <div id="main-dashboard">
-        <header>
-            <div class="logo">🌿 Rescue Protocol Dashboard</div>
-            <div style="font-size: 0.8rem; opacity: 0.7;">System Status: <span style="color:var(--primary-green)">● Active</span></div>
-        </header>
-
-        <div class="container">
-            
-            <div class="card-base">
-                <h2 style="color: var(--dark-green);">Register Cancelled Stock</h2>
-                <div class="form-grid">
-                    <div class="input-group">
-                        <label>Crop / Produce</label>
-                        <input type="text" id="cropName" placeholder="e.g. Oranges">
-                    </div>
-                    <div class="input-group">
-                        <label>Quantity (kg)</label>
-                        <input type="number" id="cropQty" placeholder="1200">
-                    </div>
-                    <div class="input-group">
-                        <label>Time Remaining (Hrs)</label>
-                        <input type="number" id="cropExpiry" placeholder="36">
-                    </div>
-                    <div class="input-group" style="display:flex; align-items:flex-end;">
-                        <button class="btn btn-primary" style="width:100%; padding:1rem;" onclick="registerStock()">Add to List</button>
-                    </div>
-                </div>
+        <div class="inventory-grid" id="marketGrid">
+            <div class="crop-card" style="border-left: 5px solid var(--primary-green);">
+                <span class="expiry-badge" style="background: #dcfce7; color: #166534;">Pivot Ready: Sauce Base</span>
+                <h3>500kg Ripe Tomatoes</h3>
+                <p>Location: 12km away | Farm: GreenValley</p>
+                <div style="margin: 1rem 0; font-weight: 700; font-size: 1.2rem; color: var(--dark-green);">$0.45 / kg</div>
+                <button class="btn btn-primary" onclick="placeOrder('500kg Tomatoes')">Instant Order</button>
             </div>
 
-            <div class="inventory-section">
-                <h2 style="margin-bottom: 1.5rem; color: var(--dark-green);">Current At-Risk Inventory</h2>
-                <div class="inventory-grid" id="invGrid">
-                    <div class="crop-card">
-                        <span class="expiry-badge">Critical: 12h left</span>
-                        <h3>Fresh Tomatoes</h3>
-                        <p>500kg available | Sector 7 Logistics</p>
-                        <button class="btn btn-primary" style="width:100%;" onclick="triggerAI('Tomatoes')">Get AI Sale Ideas</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="aiPanel" class="ai-panel">
-                <h2 id="aiTitle">🤖 Smart Value Pivot Engine</h2>
-                <p>Analyzing nearby cloud kitchens, food factories, and dehydration units...</p>
-                <div class="pivot-grid" id="pivotGrid"></div>
+            <div class="crop-card">
+                <span class="expiry-badge">Expiring in 24h</span>
+                <h3>1200kg Mangoes</h3>
+                <p>Location: 8km away | Farm: Sunny Orchard</p>
+                <div style="margin: 1rem 0; font-weight: 700; font-size: 1.2rem; color: var(--dark-green);">$0.80 / kg</div>
+                <button class="btn btn-primary" onclick="placeOrder('1200kg Mangoes')">Instant Order</button>
             </div>
         </div>
     </div>
+</div>
 
-    <div id="success-overlay">
-        <div style="font-size: 5rem; margin-bottom: 1rem;">🎉</div>
-        <h1>Broadcast Successful!</h1>
-        <p style="max-width: 450px; margin: 1.5rem auto;">Your produce has been converted into a "Value-Added Offer" and sent to 12 nearby processing partners.</p>
-        <button class="btn btn-primary" onclick="location.reload()">Back to Home</button>
-    </div>
+<div id="role-nav" style="display:none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--dark-green); padding: 10px 20px; border-radius: 50px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+    <button class="btn" style="background: transparent; color: white; font-size: 0.8rem;" onclick="switchRole('farmer')">Farmer View</button>
+    <span style="color: rgba(255,255,255,0.3)">|</span>
+    <button class="btn" style="background: transparent; color: white; font-size: 0.8rem;" onclick="switchRole('buyer')">Buyer View</button>
+</div>
 
-    <script>
-        // Transition from Onboarding to Dashboard
-        function initRescue() {
-            const onboarding = document.getElementById('onboarding-screen');
-            const dashboard = document.getElementById('main-dashboard');
-            
-            onboarding.style.opacity = '0';
-            onboarding.style.transform = 'translateY(-50px)';
-            
-            setTimeout(() => {
-                onboarding.style.display = 'none';
-                dashboard.style.display = 'block';
-                setTimeout(() => { dashboard.style.opacity = '1'; }, 50);
-            }, 800);
+<script>
+    // Logic to switch between Farmer and Buyer roles
+    function switchRole(role) {
+        const farmerDash = document.getElementById('main-dashboard');
+        const buyerDash = document.getElementById('buyer-marketplace');
+        
+        if (role === 'buyer') {
+            farmerDash.style.display = 'none';
+            buyerDash.style.display = 'block';
+            setTimeout(() => { buyerDash.style.opacity = '1'; }, 50);
+        } else {
+            buyerDash.style.display = 'none';
+            farmerDash.style.display = 'block';
+            setTimeout(() => { farmerDash.style.opacity = '1'; }, 50);
         }
+    }
 
-        const pivotData = {
-            "Tomatoes": [
-                { idea: "Sauce Base", buyer: "Cloud Kitchens", val: "+22%" },
-                { idea: "Sun-Dried", buyer: "Dehydration Plant", val: "Stable" },
-                { idea: "NGO Rescue", buyer: "Food Bank", val: "Tax Credit" }
-            ],
-            "Generic": [
-                { idea: "Flash Frozen", buyer: "Supermarkets", val: "+15%" },
-                { idea: "Juice Pulp", buyer: "Local Bottlers", val: "+30%" },
-                { idea: "Compost/Bio", buyer: "Energy Plant", val: "Recovery" }
-            ]
-        };
+    // New Order Logic
+    function placeOrder(item) {
+        alert("Order Placed Successfully for " + item + "! Logistics are being routed.");
+    }
 
-        function registerStock() {
-            const name = document.getElementById('cropName').value;
-            const qty = document.getElementById('cropQty').value;
-            const exp = document.getElementById('cropExpiry').value;
-
-            if(!name || !qty || !exp) return alert("Please fill all fields.");
-
-            const grid = document.getElementById('invGrid');
-            const card = document.createElement('div');
-            card.className = 'crop-card';
-            card.innerHTML = `
-                <span class="expiry-badge">Critical: ${exp}h left</span>
-                <h3>${name}</h3>
-                <p>${qty}kg available | Local Farmgate</p>
-                <button class="btn btn-primary" style="width:100%;" onclick="triggerAI('${name}')">Get AI Sale Ideas</button>
-            `;
-            grid.prepend(card);
-            
-            // Reset inputs
-            document.getElementById('cropName').value = '';
-            document.getElementById('cropQty').value = '';
-            document.getElementById('cropExpiry').value = '';
-        }
-
-        function triggerAI(crop) {
-            const panel = document.getElementById('aiPanel');
-            const grid = document.getElementById('pivotGrid');
-            const title = document.getElementById('aiTitle');
-            
-            title.innerText = `🤖 AI Pivot Strategy: ${crop}`;
-            panel.style.display = 'block';
-            grid.innerHTML = '';
-
-            const options = pivotData[crop] || pivotData["Generic"];
-            
-            options.forEach(opt => {
-                const div = document.createElement('div');
-                div.className = 'pivot-card';
-                div.innerHTML = `
-                    <h4 style="margin-bottom:0.5rem">${opt.idea}</h4>
-                    <p style="font-size:0.85rem; opacity:0.8; margin-bottom:1rem;">Target: ${opt.buyer}</p>
-                    <p style="color:var(--primary-green); font-weight:700;">Value: ${opt.val}</p>
-                    <button class="btn btn-primary" style="margin-top:1.5rem; padding:0.6rem; font-size:0.8rem; width:100%" onclick="finish()">Broadcast</button>
-                `;
-                grid.appendChild(div);
-            });
-
-            panel.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function finish() {
-            document.getElementById('success-overlay').style.display = 'flex';
-        }
-    </script>
-</body>
-</html>
+    // Update initRescue to show the role nav
+    const originalInitRescue = initRescue;
+    initRescue = function() {
+        originalInitRescue();
+        setTimeout(() => {
+            document.getElementById('role-nav').style.display = 'flex';
+        }, 1000);
+    };
+</script>
