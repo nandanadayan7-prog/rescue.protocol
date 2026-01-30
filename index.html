@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rescue Protocol | Farmer Dashboard</title>
+    <title>Rescue Protocol | Emergency Food Pivot</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,16 +17,68 @@
             --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
             color: var(--text-main);
-            margin: 0;
-            padding: 0;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* --- Header --- */
+        /* --- Rescue Protocol: Landing Interface --- */
+        #onboarding-screen {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-art {
+            width: 120px;
+            height: 120px;
+            background: var(--primary-green);
+            border-radius: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            color: var(--dark-green);
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            color: #4b5563;
+            max-width: 500px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* --- Dashboard Section (Hidden by Default) --- */
+        #main-dashboard {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
         header {
             padding: 1rem 5%;
             background: rgba(255, 255, 255, 0.6);
@@ -47,22 +100,21 @@
             padding: 0 20px;
         }
 
-        /* --- Input Section --- */
-        .registration-card {
+        /* --- Dashboard Cards --- */
+        .card-base {
             background: var(--white);
-            padding: 2.5rem;
             border-radius: 32px;
             box-shadow: var(--card-shadow);
-            margin-bottom: 3rem;
             border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
         }
-
-        .registration-card h2 { color: var(--dark-green); margin-bottom: 1.5rem; }
 
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
+            margin-top: 1.5rem;
         }
 
         .input-group label {
@@ -79,27 +131,12 @@
             border-radius: 16px;
             border: 2px solid var(--soft-green);
             background: var(--soft-green);
-            transition: all 0.3s ease;
             outline: none;
-        }
-
-        .input-group input:focus {
-            border-color: var(--primary-green);
-            background: var(--white);
-        }
-
-        /* --- Inventory Section --- */
-        .inventory-section h2 {
-            margin-bottom: 1.5rem;
-            color: var(--dark-green);
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .inventory-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
@@ -109,14 +146,7 @@
             border-radius: 28px;
             box-shadow: var(--card-shadow);
             border: 1px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .crop-card:hover {
-            border-color: var(--primary-green);
-            transform: translateY(-5px);
+            transition: 0.3s;
         }
 
         .expiry-badge {
@@ -130,50 +160,42 @@
             margin-bottom: 1rem;
         }
 
-        .crop-card h3 { margin-bottom: 0.5rem; }
-        .crop-card p { color: #6b7280; font-size: 0.9rem; margin-bottom: 1.5rem; }
-
         /* --- Buttons --- */
         .btn {
-            padding: 1rem 1.5rem;
-            border-radius: 18px;
-            font-weight: 600;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
             border: none;
             cursor: pointer;
             transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-primary {
             background: var(--primary-green);
             color: var(--dark-green);
-            width: 100%;
+            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.2);
         }
 
         .btn-primary:hover {
+            transform: scale(1.05);
             filter: brightness(1.05);
-            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
         }
 
-        /* --- AI Pivot Section --- */
+        /* --- AI Section --- */
         .ai-panel {
-            margin-top: 4rem;
+            margin-top: 3rem;
             padding: 3rem;
             background: var(--dark-green);
             border-radius: 40px;
             color: white;
-            text-align: center;
             display: none;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .pivot-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
             margin-top: 2rem;
         }
@@ -182,105 +204,115 @@
             background: rgba(255, 255, 255, 0.1);
             padding: 1.5rem;
             border-radius: 24px;
-            text-align: left;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .val-inc { color: var(--primary-green); font-weight: 700; font-size: 0.9rem; }
-
-        /* --- Success Overlay --- */
-        #rescue-overlay {
+        /* --- Success Screen --- */
+        #success-overlay {
             display: none;
             position: fixed;
-            top:0; left:0; width:100%; height:100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(22, 101, 52, 0.98);
-            z-index: 1000;
+            z-index: 2000;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
-            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">🌿 Rescue Protocol</div>
-        <div style="font-size: 0.9rem; color: var(--dark-green); font-weight: 600;">Farmer ID: #4402</div>
-    </header>
+    <section id="onboarding-screen">
+        <div class="hero-art">🛡️</div>
+        <h1 class="hero-title">Rescue Protocol</h1>
+        <p class="hero-sub">AI-powered emergency pivot for the agricultural supply chain. When primary orders fail, we find the value.</p>
+        <button class="btn btn-primary" onclick="initRescue()">Initialize Rescue Dashboard</button>
+        <p style="margin-top: 2rem; font-size: 0.8rem; color: #94a3b8;">v1.0 Demo Mode • Connected to Local Processors</p>
+    </section>
 
-    <div class="container">
-        
-        <div class="registration-card">
-            <h2>Add New Stock</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Crop / Produce</label>
-                    <input type="text" id="cropName" placeholder="e.g. Avocado">
-                </div>
-                <div class="input-group">
-                    <label>Weight (kg)</label>
-                    <input type="number" id="cropQty" placeholder="1000">
-                </div>
-                <div class="input-group">
-                    <label>Shelf Life (Hrs)</label>
-                    <input type="number" id="cropExpiry" placeholder="72">
-                </div>
-                <div class="input-group">
-                    <button class="btn btn-primary" onclick="registerStock()">Register Stock</button>
+    <div id="main-dashboard">
+        <header>
+            <div class="logo">🌿 Rescue Protocol Dashboard</div>
+            <div style="font-size: 0.8rem; opacity: 0.7;">System Status: <span style="color:var(--primary-green)">● Active</span></div>
+        </header>
+
+        <div class="container">
+            
+            <div class="card-base">
+                <h2 style="color: var(--dark-green);">Register Cancelled Stock</h2>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Crop / Produce</label>
+                        <input type="text" id="cropName" placeholder="e.g. Oranges">
+                    </div>
+                    <div class="input-group">
+                        <label>Quantity (kg)</label>
+                        <input type="number" id="cropQty" placeholder="1200">
+                    </div>
+                    <div class="input-group">
+                        <label>Time Remaining (Hrs)</label>
+                        <input type="number" id="cropExpiry" placeholder="36">
+                    </div>
+                    <div class="input-group" style="display:flex; align-items:flex-end;">
+                        <button class="btn btn-primary" style="width:100%; padding:1rem;" onclick="registerStock()">Add to List</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="inventory-section">
-            <h2>Active Inventory</h2>
-            <div class="inventory-grid" id="invGrid">
-                <div class="crop-card">
-                    <span class="expiry-badge">Expiring in 12h</span>
-                    <h3>Fresh Tomatoes</h3>
-                    <p>Quantity: 500kg | Location: Sector 4</p>
-                    <button class="btn btn-primary" onclick="triggerAI('Tomatoes')">Get AI Sale Ideas</button>
+            <div class="inventory-section">
+                <h2 style="margin-bottom: 1.5rem; color: var(--dark-green);">Current At-Risk Inventory</h2>
+                <div class="inventory-grid" id="invGrid">
+                    <div class="crop-card">
+                        <span class="expiry-badge">Critical: 12h left</span>
+                        <h3>Fresh Tomatoes</h3>
+                        <p>500kg available | Sector 7 Logistics</p>
+                        <button class="btn btn-primary" style="width:100%;" onclick="triggerAI('Tomatoes')">Get AI Sale Ideas</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="aiPanel" class="ai-panel">
-            <h2 id="aiTitle">🤖 AI Smart Value Pivot</h2>
-            <p id="aiDesc">Analyzing local buyer demand and processing capacity...</p>
-            <div class="pivot-grid" id="pivotGrid"></div>
-            <p style="margin-top: 2rem; opacity: 0.7; font-size: 0.9rem;">“Don’t just sell produce. Sell possibilities.”</p>
+            <div id="aiPanel" class="ai-panel">
+                <h2 id="aiTitle">🤖 Smart Value Pivot Engine</h2>
+                <p>Analyzing nearby cloud kitchens, food factories, and dehydration units...</p>
+                <div class="pivot-grid" id="pivotGrid"></div>
+            </div>
         </div>
-
     </div>
 
-    <div id="rescue-overlay">
-        <div style="font-size: 5rem;">🏆</div>
-        <h1>Smart Pivot Hero</h1>
-        <p style="max-width: 400px; margin: 1rem auto;">The broadcast was successful! Local processors have been notified of your value-added offer.</p>
-        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 20px; margin: 2rem;">
-            <p>💰 Value Recovered: +24%</p>
-            <p>🌍 CO2 Avoided: 850kg</p>
-        </div>
-        <button class="btn btn-primary" style="width: 200px;" onclick="location.reload()">Return Home</button>
+    <div id="success-overlay">
+        <div style="font-size: 5rem; margin-bottom: 1rem;">🎉</div>
+        <h1>Broadcast Successful!</h1>
+        <p style="max-width: 450px; margin: 1.5rem auto;">Your produce has been converted into a "Value-Added Offer" and sent to 12 nearby processing partners.</p>
+        <button class="btn btn-primary" onclick="location.reload()">Back to Home</button>
     </div>
 
     <script>
+        // Transition from Onboarding to Dashboard
+        function initRescue() {
+            const onboarding = document.getElementById('onboarding-screen');
+            const dashboard = document.getElementById('main-dashboard');
+            
+            onboarding.style.opacity = '0';
+            onboarding.style.transform = 'translateY(-50px)';
+            
+            setTimeout(() => {
+                onboarding.style.display = 'none';
+                dashboard.style.display = 'block';
+                setTimeout(() => { dashboard.style.opacity = '1'; }, 50);
+            }, 800);
+        }
+
         const pivotData = {
             "Tomatoes": [
-                { idea: "Tomato Puree", buyer: "Hotel Chains", val: "+30%" },
-                { idea: "Pizza Base", buyer: "Cloud Kitchens", val: "+20%" },
-                { idea: "Dehydration", buyer: "Food Factories", val: "+15%" }
-            ],
-            "Mangoes": [
-                { idea: "Mango Pulp", buyer: "Juice Brands", val: "+40%" },
-                { idea: "Dried Fruit", buyer: "Retail Brands", val: "+55%" },
-                { idea: "Chutney Base", buyer: "Export Units", val: "+25%" }
+                { idea: "Sauce Base", buyer: "Cloud Kitchens", val: "+22%" },
+                { idea: "Sun-Dried", buyer: "Dehydration Plant", val: "Stable" },
+                { idea: "NGO Rescue", buyer: "Food Bank", val: "Tax Credit" }
             ],
             "Generic": [
-                { idea: "Flash Frozen", buyer: "Supermarkets", val: "+12%" },
-                { idea: "Direct Bundle", buyer: "Local Co-ops", val: "+10%" },
-                { idea: "Rescue Pack", buyer: "NGO/Kitchens", val: "Tax Benefit" }
+                { idea: "Flash Frozen", buyer: "Supermarkets", val: "+15%" },
+                { idea: "Juice Pulp", buyer: "Local Bottlers", val: "+30%" },
+                { idea: "Compost/Bio", buyer: "Energy Plant", val: "Recovery" }
             ]
         };
 
@@ -289,20 +321,20 @@
             const qty = document.getElementById('cropQty').value;
             const exp = document.getElementById('cropExpiry').value;
 
-            if(!name || !qty || !exp) return alert("Please fill all details.");
+            if(!name || !qty || !exp) return alert("Please fill all fields.");
 
             const grid = document.getElementById('invGrid');
             const card = document.createElement('div');
             card.className = 'crop-card';
             card.innerHTML = `
-                <span class="expiry-badge">Expiring in ${exp}h</span>
+                <span class="expiry-badge">Critical: ${exp}h left</span>
                 <h3>${name}</h3>
-                <p>Quantity: ${qty}kg | Location: Farm Direct</p>
-                <button class="btn btn-primary" onclick="triggerAI('${name}')">Get AI Sale Ideas</button>
+                <p>${qty}kg available | Local Farmgate</p>
+                <button class="btn btn-primary" style="width:100%;" onclick="triggerAI('${name}')">Get AI Sale Ideas</button>
             `;
             grid.prepend(card);
             
-            // Clear inputs
+            // Reset inputs
             document.getElementById('cropName').value = '';
             document.getElementById('cropQty').value = '';
             document.getElementById('cropExpiry').value = '';
@@ -313,7 +345,7 @@
             const grid = document.getElementById('pivotGrid');
             const title = document.getElementById('aiTitle');
             
-            title.innerText = `🤖 Smart Value Pivot: ${crop}`;
+            title.innerText = `🤖 AI Pivot Strategy: ${crop}`;
             panel.style.display = 'block';
             grid.innerHTML = '';
 
@@ -324,9 +356,9 @@
                 div.className = 'pivot-card';
                 div.innerHTML = `
                     <h4 style="margin-bottom:0.5rem">${opt.idea}</h4>
-                    <p style="font-size:0.8rem; margin-bottom:1rem; opacity:0.8">Target: ${opt.buyer}</p>
-                    <p class="val-inc">Value Increase: ${opt.val}</p>
-                    <button class="btn btn-primary" style="margin-top:1rem; padding:0.6rem; font-size:0.8rem" onclick="rescue()">Broadcast</button>
+                    <p style="font-size:0.85rem; opacity:0.8; margin-bottom:1rem;">Target: ${opt.buyer}</p>
+                    <p style="color:var(--primary-green); font-weight:700;">Value: ${opt.val}</p>
+                    <button class="btn btn-primary" style="margin-top:1.5rem; padding:0.6rem; font-size:0.8rem; width:100%" onclick="finish()">Broadcast</button>
                 `;
                 grid.appendChild(div);
             });
@@ -334,8 +366,8 @@
             panel.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function rescue() {
-            document.getElementById('rescue-overlay').style.display = 'flex';
+        function finish() {
+            document.getElementById('success-overlay').style.display = 'flex';
         }
     </script>
 </body>
