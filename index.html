@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rescue Protocol | AI Food Pivot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #4ade80;
+            --soft-green: #f0fdf4;
+            --dark-green: #166534;
+            --accent-sage: #86efac;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            --gradient-bg: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient-bg);
+            color: #1f2937;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        header {
+            padding: 1.5rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--dark-green);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            text-align: center;
+            padding: 5rem 10% 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--dark-green);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #4b5563;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: var(--dark-green);
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.6);
+        }
+
+        /* --- Feature Cards --- */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 2rem 10%;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .card h3 { color: var(--dark-green); margin-bottom: 1rem; }
+
+        /* --- Dashboard Area --- */
+        .dashboard {
+            padding: 4rem 10%;
+            background: white;
+            border-radius: 50px 50px 0 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            color: var(--dark-green);
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) { .inventory-grid { grid-template-columns: 1fr; } }
+
+        .item-card {
+            background: var(--soft-green);
+            border-radius: 24px;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .expiry-tag {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* --- AI Pivot Engine --- */
+        .ai-engine {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--dark-green);
+            color: white;
+            border-radius: 32px;
+            text-align: center;
+        }
+
+        .pivot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            display: none; /* Hidden until triggered */
+        }
+
+        .pivot-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 20px;
+            text-align: left;
+        }
+
+        .value-badge {
+            color: var(--primary-green);
+            font-weight: 700;
+        }
+
+        /* --- Success Feedback --- */
+        #success-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(22, 101, 52, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .badge-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* --- Flow Steps --- */
+        .flow {
+            display: flex;
+            justify-content: space-between;
+            padding: 4rem 10%;
+            text-align: center;
+        }
+
+        .step { flex: 1; position: relative; }
+        .step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: 0; top: 20%;
+            color: var(--accent-sage);
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🌱 Rescue Protocol</div>
+        <nav>
+            <a href="#dashboard" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">Farmer Portal</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>When Orders Fail,<br>Food Shouldn’t.</h1>
+        <p>Instant resale, processing pivots, and AI-guided value recovery for agricultural supply chains.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button class="btn btn-primary" onclick="scrollToDashboard()">Activate Rescue</button>
+            <button class="btn" style="background: white;">How it works</button>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="card">
+            <h3>Emergency Detection</h3>
+            <p>Real-time monitoring of order status and cold-chain integrity.</p>
+        </div>
+        <div class="card">
+            <h3>One-Tap Liquidate</h3>
+            <p>Instantly broadcast available stock to secondary buyers within 50km.</p>
+        </div>
+        <div class="card">
+            <h3>AI Value Pivot</h3>
+            <p>Smart processing ideas to transform raw crops into higher-value goods.</p>
+        </div>
+    </section>
+
+    
+    <section class="flow">
+        <div class="step"><h4>Order Cancelled</h4></div>
+        <div class="step"><h4>AI Pivot Strategy</h4></div>
+        <div class="step"><h4>Broadcast Sent</h4></div>
+        <div class="step"><h4>Processor Pickup</h4></div>
+        <div class="step"><h4>Waste Saved</h4></div>
+    </section>
+
+    <section id="dashboard" class="dashboard">
+        <h2 class="section-title">Farmer Dashboard</h2>
+        
+        <div class="inventory-grid">
+            <div class="item-card">
+                <div>
+                    <span class="expiry-tag">Expires in 14h</span>
+                    <h3 style="margin-top: 0.5rem;">Fresh Tomatoes</h3>
+                    <p>Quantity: 500kg | Location: Barn A</p>
+                </div>
+                <div style="text-align: right;">
+                    <label style="font-size: 0.8rem; display: block; margin-bottom: 5px;">Radius: 50km</label>
+                    <button class="btn btn-primary" onclick="showAiIdeas()">Liquidate Now</button>
+                </div>
+            </div>
+
+            <div class="item-card" style="opacity: 0.6; border: 2px dashed #cbd5e1; background: transparent;">
+                <p>No other active alerts</p>
+            </div>
+        </div>
+
+        <div id="ai-section" class="ai-engine" style="display:none;">
+            <h2>🤖 Smart Value Pivot Engine</h2>
+            <p>Our AI suggests these transformations to increase value and reduce waste.</p>
+            
+            <div id="pivot-grid" class="pivot-grid">
+                <div class="pivot-card">
+                    <h4>🍅 Tomato Puree</h4>
+                    <p>Convert to bulk sauce base for local hotels.</p>
+                    <p class="value-badge">Est. Value: +25%</p>
+                    <button class="btn btn-primary" style="width:100%; margin-top:1rem; font-size:0.8rem;" onclick="simulateRescue()">Broadcast Idea</button>
+                </div>
+                <div class="pivot-card">
+                    <h4>🍕 Pizza Base</h4>
+                    <p>Pre-crushed packs for cloud kitchens.</p>
+                    <p class="value-badge">Est. Value: +18%</p>
+                    <button class="btn btn-primary" style="width:100%; margin-top:1rem; font-size:0.8rem;" onclick="simulateRescue()">Broadcast Idea</button>
+                </div>
+                <div class="pivot-card">
+                    <h4>☀️ Dehydration</h4>
+                    <p>Route to local sun-drying facility.</p>
+                    <p class="value-badge">Est. Value: Stable</p>
+                    <button class="btn btn-primary" style="width:100%; margin-top:1rem; font-size:0.8rem;" onclick="simulateRescue()">Broadcast Idea</button>
+                </div>
+            </div>
+            <p style="margin-top: 2rem; font-style: italic; opacity: 0.8;">“Don’t just sell produce. Sell possibilities.”</p>
+        </div>
+    </section>
+
+    <div id="success-screen">
+        <div>
+            <div class="badge-icon">🎖️</div>
+            <h1>Batch Rescued!</h1>
+            <p>You’ve been awarded the <strong>Smart Pivot Hero</strong> badge.</p>
+            <div style="margin: 2rem 0; background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 20px;">
+                <p>📦 500kg Saved</p>
+                <p>☁️ 1.2 Tons CO₂ Avoided</p>
+                <p>🤝 Connected to: 14 Cloud Kitchens</p>
+            </div>
+            <button class="btn btn-primary" onclick="location.reload()">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll to dashboard
+        function scrollToDashboard() {
+            document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Show AI suggestions with a slight delay to simulate "thinking"
+        function showAiIdeas() {
+            const aiSec = document.getElementById('ai-section');
+            const grid = document.getElementById('pivot-grid');
+            
+            aiSec.style.display = 'block';
+            aiSec.scrollIntoView({ behavior: 'smooth' });
+            
+            setTimeout(() => {
+                grid.style.display = 'grid';
+            }, 500);
+        }
+
+        // Simulate the final rescue broadcast
+        function simulateRescue() {
+            document.getElementById('success-screen').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
