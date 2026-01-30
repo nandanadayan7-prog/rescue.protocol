@@ -1,69 +1,224 @@
-<div id="buyer-marketplace" style="display: none; opacity: 0; transition: opacity 1s ease;">
-    <header>
-        <div class="logo">🛒 Rescue Marketplace</div>
-        <div style="font-size: 0.8rem; opacity: 0.7;">Role: <span style="color:var(--primary-green)">Verified Processor</span></div>
-    </header>
-
-    <div class="container">
-        <div class="hero" style="text-align: left; padding: 2rem 0;">
-            <h1 style="color: var(--dark-green); font-size: 2.5rem;">Rescue Opportunities</h1>
-            <p>High-quality surplus and pivot-ready produce within 50km.</p>
-        </div>
-
-        <div class="inventory-grid" id="marketGrid">
-            <div class="crop-card" style="border-left: 5px solid var(--primary-green);">
-                <span class="expiry-badge" style="background: #dcfce7; color: #166534;">Pivot Ready: Sauce Base</span>
-                <h3>500kg Ripe Tomatoes</h3>
-                <p>Location: 12km away | Farm: GreenValley</p>
-                <div style="margin: 1rem 0; font-weight: 700; font-size: 1.2rem; color: var(--dark-green);">$0.45 / kg</div>
-                <button class="btn btn-primary" onclick="placeOrder('500kg Tomatoes')">Instant Order</button>
-            </div>
-
-            <div class="crop-card">
-                <span class="expiry-badge">Expiring in 24h</span>
-                <h3>1200kg Mangoes</h3>
-                <p>Location: 8km away | Farm: Sunny Orchard</p>
-                <div style="margin: 1rem 0; font-weight: 700; font-size: 1.2rem; color: var(--dark-green);">$0.80 / kg</div>
-                <button class="btn btn-primary" onclick="placeOrder('1200kg Mangoes')">Instant Order</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="role-nav" style="display:none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--dark-green); padding: 10px 20px; border-radius: 50px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-    <button class="btn" style="background: transparent; color: white; font-size: 0.8rem;" onclick="switchRole('farmer')">Farmer View</button>
-    <span style="color: rgba(255,255,255,0.3)">|</span>
-    <button class="btn" style="background: transparent; color: white; font-size: 0.8rem;" onclick="switchRole('buyer')">Buyer View</button>
-</div>
-
-<script>
-    // Logic to switch between Farmer and Buyer roles
-    function switchRole(role) {
-        const farmerDash = document.getElementById('main-dashboard');
-        const buyerDash = document.getElementById('buyer-marketplace');
-        
-        if (role === 'buyer') {
-            farmerDash.style.display = 'none';
-            buyerDash.style.display = 'block';
-            setTimeout(() => { buyerDash.style.opacity = '1'; }, 50);
-        } else {
-            buyerDash.style.display = 'none';
-            farmerDash.style.display = 'block';
-            setTimeout(() => { farmerDash.style.opacity = '1'; }, 50);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rescue Protocol | Integrated Food Pivot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #4ade80;
+            --soft-green: #f0fdf4;
+            --dark-green: #166534;
+            --accent-sage: #bbf7d0;
+            --white: #ffffff;
+            --text-main: #1f2937;
+            --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
         }
-    }
 
-    // New Order Logic
-    function placeOrder(item) {
-        alert("Order Placed Successfully for " + item + "! Logistics are being routed.");
-    }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    // Update initRescue to show the role nav
-    const originalInitRescue = initRescue;
-    initRescue = function() {
-        originalInitRescue();
-        setTimeout(() => {
-            document.getElementById('role-nav').style.display = 'flex';
-        }, 1000);
-    };
-</script>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* --- Transitions --- */
+        .screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .active { display: block; opacity: 1; }
+
+        header {
+            padding: 1rem 5%;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent-sage);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 20px; }
+
+        /* --- UI Elements --- */
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary { background: var(--primary-green); color: var(--dark-green); box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3); }
+        .btn-primary:hover { transform: scale(1.03); }
+
+        .card {
+            background: var(--white);
+            border-radius: 32px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        /* --- Interface 1: Portal --- */
+        #portal-screen {
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        }
+
+        /* --- Interface 2 & 3: Lists --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .badge { font-size: 0.75rem; padding: 4px 12px; border-radius: 10px; font-weight: 700; background: #fee2e2; color: #dc2626; margin-bottom: 10px; display: inline-block;}
+
+        /* --- Navigation Switcher --- */
+        #role-switcher {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--dark-green); padding: 8px; border-radius: 100px;
+            display: flex; gap: 5px; z-index: 1000; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn { background: transparent; color: white; border: none; padding: 10px 20px; border-radius: 100px; cursor: pointer; font-weight: 600; font-size: 0.8rem;}
+        .nav-btn.active-nav { background: var(--primary-green); color: var(--dark-green); }
+    </style>
+</head>
+<body>
+
+    <section id="portal-screen" class="screen active">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">🛡️</div>
+        <h1 style="font-size: 3.5rem; color: var(--dark-green);">Rescue Protocol</h1>
+        <p style="max-width: 500px; margin-bottom: 2rem; color: #4b5563;">A dual-sided ecosystem connecting at-risk agricultural supply with demand-ready food processors.</p>
+        <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-primary" onclick="showScreen('farmer')">I am a Farmer</button>
+            <button class="btn" style="background: var(--white); color: var(--dark-green);" onclick="showScreen('buyer')">I am a Buyer</button>
+        </div>
+    </section>
+
+    <section id="farmer-screen" class="screen">
+        <header>
+            <div style="font-weight: 700; color: var(--dark-green);">🌱 FARMER COMMAND</div>
+            <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #e2e8f0;" onclick="showScreen('portal')">Logout</button>
+        </header>
+        <div class="container">
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3>Register Distressed Stock</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 1rem; margin-top: 1rem;">
+                    <input type="text" id="fCrop" placeholder="Crop Name" style="padding: 10px; border-radius: 10px; border: 1px solid #ddd;">
+                    <input type="number" id="fQty" placeholder="Weight (kg)" style="padding: 10px; border-radius: 10px; border: 1px solid #ddd;">
+                    <input type="number" id="fExp" placeholder="Expiry (Hrs)" style="padding: 10px; border-radius: 10px; border: 1px solid #ddd;">
+                    <button class="btn btn-primary" style="padding: 10px 20px;" onclick="addItem()">Add</button>
+                </div>
+            </div>
+            <h2>Active Rescue Alerts</h2>
+            <div class="grid" id="farmerGrid">
+                <div class="card">
+                    <span class="badge">Expiring Soon</span>
+                    <h3>Organic Tomatoes</h3>
+                    <p>500kg | Sector A-4</p>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="alert('AI Engine: Suggesting Sauce Pivot...')">Get AI Pivot Ideas</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="buyer-screen" class="screen">
+        <header>
+            <div style="font-weight: 700; color: var(--dark-green);">🛒 BUYER MARKETPLACE</div>
+            <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #e2e8f0;" onclick="showScreen('portal')">Logout</button>
+        </header>
+        <div class="container">
+            <div style="margin-bottom: 2rem;">
+                <h1>Available Rescues</h1>
+                <p>Order directly from farmers via verified email.</p>
+            </div>
+            <div class="grid" id="buyerGrid">
+                <div class="card">
+                    <span class="badge" style="background: #dcfce7; color: #166534;">Value Pivot: Sauce Ready</span>
+                    <h3>500kg Tomatoes</h3>
+                    <p>Ready for processing. Local pickup available.</p>
+                    <div style="font-weight: 700; margin: 10px 0;">$0.40 / kg</div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="sendOrder('Tomatoes', '500kg')">Order via Email</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="role-switcher" style="display: none;">
+        <button id="nav-farmer" class="nav-btn" onclick="showScreen('farmer')">Farmer Dashboard</button>
+        <button id="nav-buyer" class="nav-btn" onclick="showScreen('buyer')">Buyer Marketplace</button>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            // Deactivate nav buttons
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+
+            // Show selected screen
+            const activeScreen = document.getElementById(screenId + '-screen');
+            activeScreen.classList.add('active');
+
+            // Show/Hide role switcher
+            const switcher = document.getElementById('role-switcher');
+            if(screenId === 'portal') {
+                switcher.style.display = 'none';
+            } else {
+                switcher.style.display = 'flex';
+                document.getElementById('nav-' + screenId).classList.add('active-nav');
+            }
+        }
+
+        function addItem() {
+            const crop = document.getElementById('fCrop').value;
+            const qty = document.getElementById('fQty').value;
+            const exp = document.getElementById('fExp').value;
+            if(!crop) return;
+
+            // Add to Farmer View
+            const fGrid = document.getElementById('farmerGrid');
+            fGrid.innerHTML += `
+                <div class="card">
+                    <span class="badge">Expires in ${exp}h</span>
+                    <h3>${crop}</h3>
+                    <p>${qty}kg | Farmgate Pickup</p>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">AI Pivot Search</button>
+                </div>
+            `;
+
+            // Add to Buyer View
+            const bGrid = document.getElementById('buyerGrid');
+            bGrid.innerHTML += `
+                <div class="card">
+                    <span class="badge" style="background:#e0f2fe; color:#0369a1;">New Listing</span>
+                    <h3>${qty}kg ${crop}</h3>
+                    <p>Fresh surplus available for rescue.</p>
+                    <div style="font-weight: 700; margin: 10px 0;">Market Rate</div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="sendOrder('${crop}', '${qty}kg')">Order via Email</button>
+                </div>
+            `;
+
+            alert(crop + " registered and broadcasted to Marketplace!");
+        }
+
+        function sendOrder(item, quantity) {
+            const email = "nandanadayan7@gmail.com";
+            const subject = encodeURIComponent("Rescue Protocol: Order for " + item);
+            const body = encodeURIComponent("Hello,\n\nI would like to place an order for the following rescue stock:\n\nItem: " + item + "\nQuantity: " + quantity + "\n\nPlease confirm pickup logistics.\n\nBest regards,\nVerified Processor");
+            
+            // This opens the user's default email client
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+</html>
