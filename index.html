@@ -1,124 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rescue Protocol | Farmer Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #4ade80;
+            --soft-green: #f0fdf4;
+            --dark-green: #166534;
+            --accent-sage: #bbf7d0;
+            --white: #ffffff;
+            --text-main: #1f2937;
+            --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+        }
 
-  <section id="dashboard" class="dashboard">
-    <h2 class="section-title">Farmer Dashboard</h2>
-    
-    <div style="max-width: 800px; margin: 0 auto 3rem auto; background: var(--soft-green); padding: 2rem; border-radius: 24px; border: 1px solid var(--accent-sage);">
-        <h3 style="color: var(--dark-green); margin-bottom: 1rem;">🌿 Register New Stock</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; align-items: flex-end;">
-            <div>
-                <label style="font-size: 0.8rem; font-weight: 600;">Crop Name</label>
-                <input type="text" id="cropName" placeholder="e.g. Mangoes" style="width: 100%; padding: 0.8rem; border-radius: 12px; border: 1px solid #ccc; margin-top: 5px;">
-            </div>
-            <div>
-                <label style="font-size: 0.8rem; font-weight: 600;">Quantity (kg)</label>
-                <input type="number" id="cropQty" placeholder="500" style="width: 100%; padding: 0.8rem; border-radius: 12px; border: 1px solid #ccc; margin-top: 5px;">
-            </div>
-            <div>
-                <label style="font-size: 0.8rem; font-weight: 600;">Shelf Life (Hours)</label>
-                <input type="number" id="cropExpiry" placeholder="48" style="width: 100%; padding: 0.8rem; border-radius: 12px; border: 1px solid #ccc; margin-top: 5px;">
-            </div>
-            <button class="btn btn-primary" onclick="addNewCrop()" style="padding: 0.8rem;">Add to Rescue</button>
-        </div>
-    </div>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
 
-    <div class="inventory-grid" id="inventoryGrid">
-        <div class="item-card">
-            <div>
-                <span class="expiry-tag">Expires in 14h</span>
-                <h3 style="margin-top: 0.5rem;">Fresh Tomatoes</h3>
-                <p>Quantity: 500kg | Location: Barn A</p>
-            </div>
-            <div style="text-align: right;">
-                <button class="btn btn-primary" onclick="showAiIdeas('Tomatoes')">Liquidate Now</button>
-            </div>
-        </div>
-    </div>
+        /* --- Header --- */
+        header {
+            padding: 1rem 5%;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent-sage);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    <div id="ai-section" class="ai-engine" style="display:none; margin-top: 3rem;">
-        <h2 id="ai-title">🤖 Smart Value Pivot Engine</h2>
-        <p id="ai-subtitle">Analyzing inventory...</p>
-        
-        <div id="pivot-grid" class="pivot-grid">
-            </div>
-    </div>
-</section>
+        .logo { font-weight: 700; color: var(--dark-green); font-size: 1.2rem; }
 
-<script>
-    // Data mapping for demo suggestions based on crop type
-    const pivotDatabase = {
-        "Tomatoes": [
-            { title: "Puree/Sauce", desc: "Bulk base for hotels", value: "+25%" },
-            { title: "Pizza Base", desc: "Crushed packs for kitchens", value: "+18%" },
-            { title: "Sun-Dried", desc: "Route to dehydration unit", value: "Stable" }
-        ],
-        "Mangoes": [
-            { title: "Fruit Pulp", desc: "Supply to juice factories", value: "+30%" },
-            { title: "Dried Strips", desc: "Snack-grade processing", value: "+45%" },
-            { title: "Chutney Base", desc: "Bulk for condiment brands", value: "+15%" }
-        ],
-        "Default": [
-            { title: "Frozen Packs", desc: "Flash freeze for longevity", value: "+10%" },
-            { title: "NGO Donation", desc: "Tax-deductible rescue", value: "Social Credit" },
-            { title: "Animal Feed", desc: "Organic nutrient diversion", value: "Recovery" }
-        ]
-    };
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
 
-    function addNewCrop() {
-        const name = document.getElementById('cropName').value;
-        const qty = document.getElementById('cropQty').value;
-        const expiry = document.getElementById('cropExpiry').value;
+        /* --- Input Section --- */
+        .registration-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 32px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
 
-        if(!name || !qty) return alert("Please enter crop details");
+        .registration-card h2 { color: var(--dark-green); margin-bottom: 1.5rem; }
 
-        const grid = document.getElementById('inventoryGrid');
-        const newCard = document.createElement('div');
-        newCard.className = 'item-card';
-        newCard.innerHTML = `
-            <div>
-                <span class="expiry-tag">Expires in ${expiry}h</span>
-                <h3 style="margin-top: 0.5rem;">${name}</h3>
-                <p>Quantity: ${qty}kg | Location: Farm Pickup</p>
-            </div>
-            <div style="text-align: right;">
-                <button class="btn btn-primary" onclick="showAiIdeas('${name}')">Liquidate Now</button>
-            </div>
-        `;
-        grid.prepend(newCard); // Add to top
-        
-        // Clear inputs
-        document.getElementById('cropName').value = '';
-        document.getElementById('cropQty').value = '';
-        document.getElementById('cropExpiry').value = '';
-    }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
 
-    function showAiIdeas(cropName) {
-        const aiSec = document.getElementById('ai-section');
-        const grid = document.getElementById('pivot-grid');
-        const title = document.getElementById('ai-title');
-        
-        // Update AI Section text
-        title.innerText = `🤖 AI Pivot Strategy for ${cropName}`;
-        aiSec.style.display = 'block';
-        grid.innerHTML = ''; // Clear previous
-        
-        // Fetch suggestions (use default if crop not in demo DB)
-        const suggestions = pivotDatabase[cropName] || pivotDatabase["Default"];
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark-green);
+        }
 
-        suggestions.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'pivot-card';
-            card.innerHTML = `
-                <h4>${item.title}</h4>
-                <p>${item.desc}</p>
-                <p class="value-badge">Est. Value: ${item.value}</p>
-                <button class="btn btn-primary" style="width:100%; margin-top:1rem; font-size:0.8rem;" onclick="simulateRescue()">Broadcast Idea</button>
-            `;
-            grid.appendChild(card);
-        });
-
-        aiSec.scrollIntoView({ behavior: 'smooth' });
-        setTimeout(() => { grid.style.display = 'grid'; }, 300);
-    }
-
-    // Reuse simulateRescue and scrollToDashboard from previous snippet
-</script>
+        .input-group input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 16px;
+            border: 2px solid var(--soft-green);
+            background: var(--soft-green);
+            transition: all 0.3s ease;
+            outline
